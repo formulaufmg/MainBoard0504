@@ -256,17 +256,14 @@ int main(void)
   CAN_Config();
   UserMsgConfig();
 
-  /*Acelerometro*/
-  SD_MPU6050_Init (&hi2c2, &mpu1, SD_MPU6050_Device_0,SD_MPU6050_Accelerometer_2G, SD_MPU6050_Gyroscope_250s);
-
   /* Inicializa ADC no modo circular, carregando resultados no buffer adc_buffer*/
   HAL_ADC_Start_DMA(&hadc1, adc_buffer, 600);
 
   /* Sinaliza para timer comecar a contagem */
   HAL_TIM_Base_Start_IT(&htim3);
 
-  /* Sinaliza para timer4 (base do tempo para o PWM) iniciar a contagem*/
-  HAL_TIM_Base_Start(&htim4);
+   /* Sinaliza para timer4 (base do tempo para o PWM) iniciar a contagem*/
+   HAL_TIM_Base_Start(&htim4);
 
   /* Chama fun��o de recep��o de frames CAN  */
   if (HAL_CAN_Receive_IT(&hcan, CAN_FIFO0) != HAL_OK)
@@ -274,6 +271,9 @@ int main(void)
       /* Reception Error */
      Error_Handler();
     }
+
+  /*Acelerometro*/
+   SD_MPU6050_Init (&hi2c2, &mpu1, SD_MPU6050_Device_0,SD_MPU6050_Accelerometer_2G, SD_MPU6050_Gyroscope_250s);
 
 
   /* USER CODE END 2 */
@@ -643,7 +643,7 @@ static void MX_GPIO_Init(void)
 
   /*Configure GPIO pin : PB8 */
   GPIO_InitStruct.Pin = GPIO_PIN_8;
-  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING_FALLING;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
@@ -1180,7 +1180,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 			TEMPBREAK_1 = 2*(dutyCycle-125)*280 + 20000;
 		}
 		else{
-			PWMHighCounter = 	TIM4->CNT;
+			PWMHighCounter = TIM4->CNT;
 		}
 	}
 }
