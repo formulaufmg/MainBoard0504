@@ -74,11 +74,12 @@ DMA_HandleTypeDef hdma_usart1_tx;
 #define FUELP_ADDR 0x000C
 #define MAP_ADDR 0x0004
 #define DRSFRPM 0x0020
+#define SPEEDRL_ADDR 0x001C //Velocidade traseira
 
 /* Define endere�os das temperaturas do Freio*/
 
 /*Variaveis globais dos dados*/
-uint16_t RPM = 0,  SPEEDFR = 0, TIMERCOUNT=0, POSVOL = 0, PFREIOT = 0, PFREIOD =0, TEMPPDU = 0,TPS, ECT, BAT, OILP,FUELP, CORRENTE=0, SUSP = 0;
+uint16_t RPM = 0,  SPEEDFR = 0, SPEEDREAR = 0, TIMERCOUNT=0, POSVOL = 0, PFREIOT = 0, PFREIOD =0, TEMPPDU = 0,TPS, ECT, BAT, OILP,FUELP, CORRENTE=0, SUSP = 0;
 float  MAP;
 uint8_t BOMBA, VENT, SPARKC, BEACON = 0;
 
@@ -701,6 +702,9 @@ void getMeasure(uint8_t address, uint16_t value){
 	case	DRSFRPM:
 		RPM = value;
 		break;
+	case SPEEDRL_ADDR:
+		SPEEDREAR = value;
+		break;
 	default:
 		break;
 	}
@@ -967,7 +971,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
 		/*Mensagem para interface, pacote de 50Hz so com acelerometro*/
 
 		SUSP = 0;
-		sprintf(tx_buffer, "%d %d %d %d %d %d %d %d\n", 1, a_x, a_y, a_z, SPEEDFR, SPARKC,SUSP, TIMERCOUNT);/*Mensagem para interface novo jeito, pacote de 50Hz*/
+		sprintf(tx_buffer, "%d %d %d %d %d %d %d %d\n", 1, a_x, a_y, a_z, SPEEDFR, SPARKC, SUSP, TIMERCOUNT);/*Mensagem para interface novo jeito, pacote de 50Hz*/
 
 			//assemblePackage(1);
 
