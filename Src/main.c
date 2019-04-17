@@ -62,7 +62,7 @@ DMA_HandleTypeDef hdma_usart1_tx;
 /* Private variables ---------------------------------------------------------*/
 
 /* Para enviar como string, defina SENDNUMBER como 0. Para enviar um buffer de bytes, defina como 1*/
-#define SENDNUMBER 1
+#define SENDNUMBER 0
 
 /* Define endere�os dos dados (measureID) de acordo com o protocolo FTCAN2.0*/
 #define TPS_ADDR 0x0002
