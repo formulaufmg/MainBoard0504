@@ -1088,12 +1088,13 @@ void assemblePackage(uint8_t n){
 		buff1[6]=a_z >> 8;
 		buff1[7]= a_z;
 		buff1[8] = SPEEDFR;
-		buff1[9] = (SUSP>>8) | (SPARKC<<7);
-		buff1[10] = SUSP;   //0 a 4095
-		buff1[11] = TIMERCOUNT>>8;
-		buff1[12] = TIMERCOUNT;
-		buff1[13] = 9;
-		buff1[14] = '\n';
+		buff1[9] = SPEEDREAR;
+		buff1[10] = (SUSP>>8) | (SPARKC<<7);
+		buff1[11] = SUSP;   //0 a 4095
+		buff1[12] = TIMERCOUNT>>8;
+		buff1[13] = TIMERCOUNT;
+		buff1[14] = 9;
+		buff1[15] = '\n';
 		break;
 	case 2:
 		buff2[0]=2;
