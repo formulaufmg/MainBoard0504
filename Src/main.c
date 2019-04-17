@@ -1113,10 +1113,12 @@ void assemblePackage(uint8_t n){
 		buff2[13] = POSVOL;
 		buff2[14] = (CORRENTE>>8) | (BEACON<<7);
 		buff2[15] = CORRENTE;
-		buff2[16] = TIMERCOUNT>>8;
-		buff2[17] = TIMERCOUNT;
-		buff2[18] = 9;
-		buff2[19] = '\n';
+		buff2[16] = RPM>>8;
+		buff2[17] = RPM;
+		buff2[18] = TIMERCOUNT>>8;
+		buff2[19] = TIMERCOUNT;
+		buff2[20] = 9;
+		buff2[21] = '\n';
 			break;
 	case 3:
 		buff3[0]=3;
