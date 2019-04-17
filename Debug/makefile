@@ -28,13 +28,13 @@ endif
 # Add inputs and outputs from these tool invocations to the build variables 
 
 # All Target
-all: Maiume.elf
+all: MainBoard0504.elf
 
 # Tool invocations
-Maiume.elf: $(OBJS) $(USER_OBJS) ../STM32F103C8Tx_FLASH.ld
+MainBoard0504.elf: $(OBJS) $(USER_OBJS) ../STM32F103C8Tx_FLASH.ld
 	@echo 'Building target: $@'
 	@echo 'Invoking: MCU GCC Linker'
-	arm-none-eabi-gcc -mcpu=cortex-m3 -mthumb -mfloat-abi=soft -specs=nosys.specs -specs=nano.specs -T"../STM32F103C8Tx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -o "Maiume.elf" @"objects.list" $(USER_OBJS) $(LIBS) -lm
+	arm-none-eabi-gcc -mcpu=cortex-m3 -mthumb -mfloat-abi=soft -specs=nosys.specs -specs=nano.specs -T"../STM32F103C8Tx_FLASH.ld" -Wl,-Map=output.map -Wl,--gc-sections -o "MainBoard0504.elf" @"objects.list" $(USER_OBJS) $(LIBS) -lm
 	@echo 'Finished building target: $@'
 	@echo ' '
 	$(MAKE) --no-print-directory post-build
@@ -46,8 +46,8 @@ clean:
 
 post-build:
 	-@echo 'Generating hex and Printing size information:'
-	arm-none-eabi-objcopy -O ihex "Maiume.elf" "Maiume.hex"
-	arm-none-eabi-size "Maiume.elf"
+	arm-none-eabi-objcopy -O ihex "MainBoard0504.elf" "MainBoard0504.hex"
+	arm-none-eabi-size "MainBoard0504.elf"
 	-@echo ' '
 
 .PHONY: all clean dependents

@@ -282,19 +282,11 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  /* Pisca LED para sinalizar que h� um programa rodando */
-	  //HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
-	//  result = SD_MPU6050_Init (&hi2c2, &mpu1, SD_MPU6050_Device_0,SD_MPU6050_Accelerometer_2G, SD_MPU6050_Gyroscope_250s);
-	//  HAL_Delay(100);
 
   /* USER CODE END WHILE */
 
   /* USER CODE BEGIN 3 */
 
-	 	 //SD_MPU6050_ReadAccelerometer(&hi2c2,&mpu1);
-	 //	 a_x = mpu1.Accelerometer_X;
-	 	// a_y = mpu1.Accelerometer_Y;
-	 //	 a_z = mpu1.Accelerometer_Z;
   }
   /* USER CODE END 3 */
 
@@ -849,6 +841,20 @@ void HAL_CAN_RxCpltCallback(CAN_HandleTypeDef *hcan)
 		/* Nos 5 bytes restantes, armazena payload no array */
 		for (i=3;i<dataLength;i++){
 			payloadData[payloadCnt] = canData[i];
+
+			if(payloadCnt % 4 == 3){
+				uint8_t add = payloadData[payloadCnt-2];
+
+				/*Junta os 2 bytes correspondentes ao valor do dado*/
+				uint16_t value = (payloadData[payloadCnt-1]<<8)|payloadData[payloadCnt];
+				getMeasure(add, value);
+			}
+
+			/* Chegou no final da payload */
+			if((payloadCnt == payloadLength-1)){
+				break;
+			}
+
 			payloadCnt++;
 		}
 	}
@@ -992,8 +998,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
 		if(pack2_cnt == 1){
 			/*Carrega o buffer do pacote 2*/
 
-
-			sprintf(tx_buffer2, "%d %d %d %d %d %d %d %d %d %d\n", 2, OILP, FUELP, TPS, PFREIOT, PFREIOD,POSVOL, BEACON,CORRENTE, TIMERCOUNT);
+			sprintf(tx_buffer2, "%d %d %d %d %d %d %d %d %d %d %d\n", 2, OILP, FUELP, TPS, PFREIOT, PFREIOD,POSVOL, BEACON,CORRENTE, RPM, TIMERCOUNT);
 
 			/* Transmissao do pacote 2. Espera UART estar liberado p/ transmitir */
 			while (HAL_UART_GetState(&huart1) != HAL_UART_STATE_READY){}
