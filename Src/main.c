@@ -62,7 +62,7 @@ DMA_HandleTypeDef hdma_usart1_tx;
 /* Private variables ---------------------------------------------------------*/
 
 /* Para enviar como string, defina SENDNUMBER como 0. Para enviar um buffer de bytes, defina como 1*/
-#define SENDNUMBER 1
+#define SENDNUMBER 0
 
 /* Define endere�os dos dados (measureID) de acordo com o protocolo FTCAN2.0*/
 #define TPS_ADDR 0x0002
@@ -256,14 +256,13 @@ int main(void)
   CAN_Config();
   UserMsgConfig();
 
+
+  /*Acelerometro*/
+   SD_MPU6050_Init (&hi2c2, &mpu1, SD_MPU6050_Device_0,SD_MPU6050_Accelerometer_2G, SD_MPU6050_Gyroscope_250s);
+
+
   /* Inicializa ADC no modo circular, carregando resultados no buffer adc_buffer*/
   HAL_ADC_Start_DMA(&hadc1, adc_buffer, 600);
-
-  /* Sinaliza para timer comecar a contagem */
-  HAL_TIM_Base_Start_IT(&htim3);
-
-   /* Sinaliza para timer4 (base do tempo para o PWM) iniciar a contagem*/
-   HAL_TIM_Base_Start(&htim4);
 
   /* Chama fun��o de recep��o de frames CAN  */
   if (HAL_CAN_Receive_IT(&hcan, CAN_FIFO0) != HAL_OK)
@@ -272,8 +271,11 @@ int main(void)
      Error_Handler();
     }
 
-  /*Acelerometro*/
-   SD_MPU6050_Init (&hi2c2, &mpu1, SD_MPU6050_Device_0,SD_MPU6050_Accelerometer_2G, SD_MPU6050_Gyroscope_250s);
+   /* Sinaliza para timer4 (base do tempo para o PWM) iniciar a contagem*/
+   HAL_TIM_Base_Start(&htim4);
+
+   /* Sinaliza para timer comecar a contagem */
+   HAL_TIM_Base_Start_IT(&htim3);
 
 
   /* USER CODE END 2 */
@@ -1066,6 +1068,11 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
 	a_x = mpu1.Accelerometer_X;
 	a_y = mpu1.Accelerometer_Y;
 	a_z = mpu1.Accelerometer_Z;
+	/*
+	a_x = 0;
+	a_y = 0;
+	a_z = 0;
+	*/
 	pack2_cnt++;
 	pack3_cnt++;
 }
