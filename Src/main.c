@@ -74,11 +74,14 @@ DMA_HandleTypeDef hdma_usart1_tx;
 #define FUELP_ADDR 0x000C
 #define MAP_ADDR 0x0004
 #define DRSFRPM 0x0020
+#define ECU_INJ_TIME_A 0x0086
+#define ECU_INJ_TIME_B 0x0088
 
 /* Define endere�os das temperaturas do Freio*/
 
 /*Variaveis globais dos dados*/
 uint16_t RPM = 0,  SPEEDFR = 0, TIMERCOUNT=0, POSVOL = 0, PFREIOT = 0, PFREIOD =0, TEMPPDU = 0,TPS, ECT, BAT, OILP,FUELP, CORRENTE=0, SUSP = 0;
+uint16_t INJEC_TIME_A = 0, INJEC_TIME_B = 0;
 float  MAP;
 uint8_t BOMBA, VENT, SPARKC, BEACON = 0;
 
@@ -702,6 +705,14 @@ void getMeasure(uint8_t address, uint16_t value){
 		break;
 	case	DRSFRPM:
 		RPM = value;
+		break;
+	case ECU_INJ_TIME_A:
+		// INJEC_TIME_A = 0.1*value;
+		INJEC_TIME_A = value;
+		break;
+	case ECU_INJ_TIME_B:
+		// INJEC_TIME_B = 0.1*value;
+		INJEC_TIME_B = value;
 		break;
 	default:
 		break;
