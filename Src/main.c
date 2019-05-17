@@ -152,6 +152,7 @@ void TR_CAN_Transmit( CanTxMsgTypeDef *MessageTX, uint8_t Data_size, uint8_t Dat
 void UserMsgConfig(void);
 void getMeasure(uint8_t address, uint16_t value);
 void sendFrame(void);
+void assemblePackage(uint8_t n);
 
 /*Chama essa fun��o quando completa a conversao dos canais ADC*/
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc){
@@ -212,9 +213,7 @@ int main(void)
 {
   /* USER CODE BEGIN 1 */
 
-   SD_MPU6050_Result result;
-   char mpu_ok[20] = {"MPU WORK FINE\n\r"};
-   char mpu_not[20] = {"MPU NOT WORKING\n"};
+
   /* USER CODE END 1 */
 
   /* MCU Configuration----------------------------------------------------------*/
@@ -1104,10 +1103,14 @@ void assemblePackage(uint8_t n){
 		buff1[8] = SPEEDFR;
 		buff1[9] = (SUSP>>8) | (SPARKC<<7);
 		buff1[10] = SUSP;   //0 a 4095
-		buff1[11] = TIMERCOUNT>>8;
-		buff1[12] = TIMERCOUNT;
-		buff1[13] = 9;
-		buff1[14] = '\n';
+		buff1[11] = INJEC_TIME_A >>8;
+		buff1[12] = INJEC_TIME_A;
+		buff1[13] = INJEC_TIME_B >>8;
+		buff2[14] = INJEC_TIME_B;
+		buff1[15] = TIMERCOUNT>>8;
+		buff1[16] = TIMERCOUNT;
+		buff1[17] = 9;
+		buff1[18] = '\n';
 		break;
 	case 2:
 		buff2[0]=2;
