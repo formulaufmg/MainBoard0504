@@ -980,7 +980,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
 		/*Mensagem para interface, pacote de 50Hz so com acelerometro*/
 
 		SUSP = 0;
-		sprintf(tx_buffer, "%d %d %d %d %d %d %d %d\n", 1, a_x, a_y, a_z, SPEEDFR, SPARKC,SUSP, TIMERCOUNT);/*Mensagem para interface novo jeito, pacote de 50Hz*/
+		sprintf(tx_buffer, "%d %d %d %d %d %d %d %d %d %d\n", 1, a_x, a_y, a_z, SPEEDFR, SPARKC,SUSP, INJEC_TIME_A, INJEC_TIME_B,TIMERCOUNT);/*Mensagem para interface novo jeito, pacote de 50Hz*/
 
 			//assemblePackage(1);
 
