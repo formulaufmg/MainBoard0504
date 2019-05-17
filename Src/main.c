@@ -74,11 +74,14 @@ DMA_HandleTypeDef hdma_usart1_tx;
 #define FUELP_ADDR 0x000C
 #define MAP_ADDR 0x0004
 #define DRSFRPM 0x0020
+#define ECU_INJ_TIME_A 0x0086
+#define ECU_INJ_TIME_B 0x0088
 
 /* Define endere�os das temperaturas do Freio*/
 
 /*Variaveis globais dos dados*/
 uint16_t RPM = 0,  SPEEDFR = 0, TIMERCOUNT=0, POSVOL = 0, PFREIOT = 0, PFREIOD =0, TEMPPDU = 0,TPS, ECT, BAT, OILP,FUELP, CORRENTE=0, SUSP = 0;
+uint16_t INJEC_TIME_A = 0, INJEC_TIME_B = 0;
 float  MAP;
 uint8_t BOMBA, VENT, SPARKC, BEACON = 0;
 
@@ -149,6 +152,7 @@ void TR_CAN_Transmit( CanTxMsgTypeDef *MessageTX, uint8_t Data_size, uint8_t Dat
 void UserMsgConfig(void);
 void getMeasure(uint8_t address, uint16_t value);
 void sendFrame(void);
+void assemblePackage(uint8_t n);
 
 /*Chama essa fun��o quando completa a conversao dos canais ADC*/
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc){
@@ -209,9 +213,7 @@ int main(void)
 {
   /* USER CODE BEGIN 1 */
 
-   SD_MPU6050_Result result;
-   char mpu_ok[20] = {"MPU WORK FINE\n\r"};
-   char mpu_not[20] = {"MPU NOT WORKING\n"};
+
   /* USER CODE END 1 */
 
   /* MCU Configuration----------------------------------------------------------*/
@@ -703,6 +705,14 @@ void getMeasure(uint8_t address, uint16_t value){
 	case	DRSFRPM:
 		RPM = value;
 		break;
+	case ECU_INJ_TIME_A:
+		// INJEC_TIME_A = 0.1*value;
+		INJEC_TIME_A = value;
+		break;
+	case ECU_INJ_TIME_B:
+		// INJEC_TIME_B = 0.1*value;
+		INJEC_TIME_B = value;
+		break;
 	default:
 		break;
 	}
@@ -969,7 +979,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
 		/*Mensagem para interface, pacote de 50Hz so com acelerometro*/
 
 		SUSP = 0;
-		sprintf(tx_buffer, "%d %d %d %d %d %d %d %d\n", 1, a_x, a_y, a_z, SPEEDFR, SPARKC,SUSP, TIMERCOUNT);/*Mensagem para interface novo jeito, pacote de 50Hz*/
+		sprintf(tx_buffer, "%d %d %d %d %d %d %d %d %d %d\n", 1, a_x, a_y, a_z, SPEEDFR, SPARKC,SUSP, INJEC_TIME_A, INJEC_TIME_B,TIMERCOUNT);/*Mensagem para interface novo jeito, pacote de 50Hz*/
 
 			//assemblePackage(1);
 
@@ -1093,10 +1103,14 @@ void assemblePackage(uint8_t n){
 		buff1[8] = SPEEDFR;
 		buff1[9] = (SUSP>>8) | (SPARKC<<7);
 		buff1[10] = SUSP;   //0 a 4095
-		buff1[11] = TIMERCOUNT>>8;
-		buff1[12] = TIMERCOUNT;
-		buff1[13] = 9;
-		buff1[14] = '\n';
+		buff1[11] = INJEC_TIME_A >>8;
+		buff1[12] = INJEC_TIME_A;
+		buff1[13] = INJEC_TIME_B >>8;
+		buff2[14] = INJEC_TIME_B;
+		buff1[15] = TIMERCOUNT>>8;
+		buff1[16] = TIMERCOUNT;
+		buff1[17] = 9;
+		buff1[18] = '\n';
 		break;
 	case 2:
 		buff2[0]=2;
